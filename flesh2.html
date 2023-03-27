@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="UTF-8">
+ <title>Анализатор сложности текста</title>
+</head>
+<body style="background-color: #bdd1db;display: flex;background-blend-mode: soft-light;flex-direction: column;justify-items: center;">
+ <h1  style=" text-align: center;">Анализатор сложности текста</h1>
+ <form style="margin: auto;"> 
+  <label for="inputText" style="font-weight: 600; font-size: 22px;">Введите текст для анализа:</label><br>
+  <textarea id="inputText" name="inputText" rows="30" cols="100" style="border-left-width: 0px;
+  padding-top: 2px; margin-top: 8px;"></textarea><br>
+  <input type="button" value="Рассчитать" onclick="calculateReadability()"><br><br>
+  <label for="fleschIndex">Индекс Флеша:</label>
+  <input type="text" id="fleschIndex" name="fleschIndex" readonly><br>
+  <label for="fleschKincaidIndex">Возраст читающего:</label>
+  <input type="text" id="fleschKincaidIndex" name="fleschKincaidIndex" readonly>
+ </form>
+ 
+ <script>
+    function calculateReadability() {
+     /*в переменную text считаем содержимое поля для ввода текста*/
+     var text = document.getElementById("inputText").value;
+     /* в переменную words посчитаем количество слов в тексте
+     для этого с помощью функции march найдем все слова в текте и поместим их в массив.
+     функция length вернет нам величину массива, то есть количество слов в тексте.
+     В регулярном выражении используются флаги 
+     g	Позволяет найти все совпадения, а не останавливаться после первого совпадения (global match flag).
+     i	Позволяет выполнить сопоставление без учета регистра (ignore case flag).
+     */
+     var words = text.match(/[\wа-я]+/gi).length;
+     console.log('words='+words);
+     var sentences = text.split(/[.!?]/g).length;
+     var syllablesRegex = /[аеёиоуыэюя]/gi;
+     var syllables = text.toLowerCase().match(syllablesRegex).length;
+     var flesch = 206.835 - 1.015*(words/sentences) - 84.6*(syllables/words);
+     var fleschKincaid = 0.39*(words/sentences) + 11.8*(syllables/words) - 15.59;
+     document.getElementById("fleschIndex").value = flesch.toFixed(2);
+     document.getElementById("fleschKincaidIndex").value = fleschKincaid.toFixed(0);
+    }
+   </script>
+  </body>
+  </html>
